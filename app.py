@@ -48,7 +48,7 @@ st.markdown("""
 # SIDEBAR
 # ============================================================================
 with st.sidebar:
-    st.markdown("## 🔢 MNIST Digit Classifier")
+    st.markdown("## MNIST Digit Classifier")
     st.markdown("---")
     
     st.markdown("""
@@ -79,7 +79,7 @@ with st.sidebar:
     """)
     
     st.markdown("---")
-    st.markdown("**Model Status**: Ready for prediction ✓")
+    st.markdown("**Model Status**: Ready for prediction")
 
 # ============================================================================
 # MAIN CONTENT
@@ -98,12 +98,15 @@ Upload an image of a handwritten digit and the model will predict what digit it 
 @st.cache_resource
 def load_model_and_labels():
     """Load the trained model and class labels"""
-    model_path = "mnist_classifier.keras"
+    model_path = "baseline_cnn.keras"
+    # model_path = "dnn_dropout.keras"
+    # model_path = "mobilenetv2_transfer.keras"
+    # model_path = "resnet50_transfer.keras"
     labels_path = "class_labels.json"
     
     # Check if model exists
     if not os.path.exists(model_path):
-        st.error(f"❌ Model file not found: {model_path}")
+        st.error(f"Model file not found: {model_path}")
         st.info("Please ensure `mnist_classifier.keras` is in the same directory as this app")
         return None, None
     
@@ -118,7 +121,7 @@ def load_model_and_labels():
         model = keras.models.load_model(model_path)
         return model, labels
     except Exception as e:
-        st.error(f"❌ Error loading model: {e}")
+        st.error(f"Error loading model: {e}")
         return None, None
 
 def preprocess_image(img, target_size=(28, 28)):
@@ -202,19 +205,19 @@ st.markdown("---")
 
 if st.button("Predict Digit", type="primary", use_container_width=True):
     if "uploaded_image" not in st.session_state:
-        st.error("❌ Please upload an image first")
+        st.error("Please upload an image first")
     else:
         # Load model and labels
         model, labels = load_model_and_labels()
         
         if model is None or labels is None:
-            st.error("❌ Could not load model or labels")
+            st.error("Could not load model or labels")
         else:
             # Preprocess image
             img_array, processed_img = preprocess_image(st.session_state.uploaded_image)
             
             # Make prediction
-            with st.spinner("🤖 Analyzing digit..."):
+            with st.spinner("Analyzing digit..."):
                 probabilities = model.predict(img_array, verbose=0)
             
             # Get predictions
@@ -227,7 +230,7 @@ if st.button("Predict Digit", type="primary", use_container_width=True):
             
             # Top-1 Prediction (in green box)
             st.markdown(
-                f'<div class="prediction-success">✓ Predicted Digit: <span class="confidence-high">{predicted_class}</span></div>',
+                f'<div class="prediction-success">Predicted Digit: <span class="confidence-high">{predicted_class}</span></div>',
                 unsafe_allow_html=True
             )
             

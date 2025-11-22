@@ -57,9 +57,22 @@ cd DL-Classifier-Web-Application
 
 ### Step 2: Create Python Virtual Environment
 
-**On Windows (PowerShell):**
+**On Windows (PowerShell) - Recommended (shorter path):**
 ```powershell
-# Create virtual environment
+# Create virtual environment at a shorter path to avoid Windows path limits
+mkdir C:\projects\dlenv
+python -m venv C:\projects\dlenv
+
+# Activate it
+C:\projects\dlenv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+**On Windows (PowerShell) - Alternative (local env):**
+```powershell
+# Create virtual environment in project directory
 python -m venv env
 
 # Activate it
@@ -81,16 +94,23 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-> **Note on Windows Path Limits**: If you encounter path length errors during installation, create the venv at a shorter path:
-> ```powershell
-> mkdir C:\projects\dlenv
-> python -m venv C:\projects\dlenv
-> C:\projects\dlenv\Scripts\Activate.ps1
-> ```
+> **Note on Windows Path Limits**: The recommended method creates venv at `C:\projects\dlenv` (shorter path) to avoid errors with long paths. If you prefer a local `env` folder, use the Alternative method above.
 
 ### Step 3: Launch the Web Application
 
-**On Windows (PowerShell):**
+**On Windows (PowerShell) - if using recommended `C:\projects\dlenv`:**
+```powershell
+# Activate your virtual environment
+C:\projects\dlenv\Scripts\Activate.ps1
+
+# Navigate to project directory
+cd "path\to\DL-Classifier-Web-Application"
+
+# Run the app
+python -m streamlit run app.py
+```
+
+**On Windows (PowerShell) - if using local `env` folder:**
 ```powershell
 # Activate your virtual environment
 .\env\Scripts\Activate.ps1
@@ -109,8 +129,6 @@ python -m streamlit run app.py
 ```
 
 The app will open automatically at: http://localhost:8501
-
-**Note:** If you created venv at a different location (e.g., `C:\projects\dlenv`), activate it from that path instead, then navigate to the project directory and run the app.
 
 ---
 
