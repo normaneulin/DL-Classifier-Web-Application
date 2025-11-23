@@ -1,5 +1,5 @@
 """
-Streamlit Web Application for MNIST Digit Classifier
+Streamlit Web Application for Handwritten Digit Classifier
 Deploys a trained Deep Learning Classifier as an interactive web app
 """
 
@@ -13,7 +13,7 @@ from tensorflow import keras
 
 # Configure page
 st.set_page_config(
-    page_title="MNIST Digit Classifier",
+    page_title="Handwritten Digit Classifier",
     page_icon="D",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -48,7 +48,7 @@ st.markdown("""
 # SIDEBAR
 # ============================================================================
 with st.sidebar:
-    st.markdown("## MNIST Digit Classifier")
+    st.markdown("## Handwritten Digit Classifier")
     st.markdown("---")
     
     st.markdown("""
@@ -102,16 +102,12 @@ with col_center_desc:
 def load_model_and_labels():
     """Load the trained model and class labels"""
     model_path = "dnn_model.keras"
-    # model_path = "baseline_cnn.keras"
-    # model_path = "dnn_dropout.keras"
-    # model_path = "mobilenetv2_transfer.keras"
-    # model_path = "resnet50_transfer.keras"
     labels_path = "class_labels.json"
     
     # Check if model exists
     if not os.path.exists(model_path):
         st.error(f"Model file not found: {model_path}")
-        st.info("Please ensure `mnist_classifier.keras` is in the same directory as this app")
+        st.info("Please ensure `dnn_model.keras` is in the same directory as this app")
         return None, None
     
     if not os.path.exists(labels_path):
@@ -286,7 +282,7 @@ with col_center_footer:
     st.markdown("---")
     st.markdown("""
     <div style="text-align: center; color: #666; font-size: 0.9rem;">
-        <p>MNIST Digit Classifier | Deep Learning Web Application</p>
+        <p>Handwritten Digit Classifier | Deep Learning Web Application</p>
         <p>Built with Streamlit and TensorFlow/Keras</p>
     </div>
     """, unsafe_allow_html=True)
