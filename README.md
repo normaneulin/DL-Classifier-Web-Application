@@ -481,5 +481,3 @@ For issues or questions:
 **Last Tested**: November 22, 2025
 **Framework**: Streamlit + TensorFlow/Keras
 **Python Version**: 3.11+
-
-Happy Predicting!

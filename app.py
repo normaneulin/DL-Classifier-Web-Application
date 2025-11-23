@@ -98,8 +98,8 @@ Upload an image of a handwritten digit and the model will predict what digit it 
 @st.cache_resource
 def load_model_and_labels():
     """Load the trained model and class labels"""
-    model_path = "baseline_cnn.keras"
-    # model_path = "dnn_dropout.keras"
+    # model_path = "baseline_cnn.keras"
+    model_path = "dnn_dropout.keras"
     # model_path = "mobilenetv2_transfer.keras"
     # model_path = "resnet50_transfer.keras"
     labels_path = "class_labels.json"
