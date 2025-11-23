@@ -89,10 +89,13 @@ with st.sidebar:
 st.markdown('<h1 class="main-header">Handwritten Digit Classifier</h1>', 
             unsafe_allow_html=True)
 
-st.markdown("""
----
-Upload an image of a handwritten digit and the model will predict what digit it is!
-""")
+# Center the description text
+col_left_desc, col_center_desc, col_right_desc = st.columns([1, 2, 1])
+with col_center_desc:
+    st.markdown("""
+    ---
+    Upload an image of a handwritten digit and the model will predict what digit it is!
+    """)
 
 # Load model and labels
 @st.cache_resource
@@ -167,32 +170,42 @@ def get_top_5_predictions(probabilities, labels):
 # IMAGE UPLOAD AND PREDICTION
 # ============================================================================
 
-st.subheader("Upload Image")
-st.markdown("Upload a handwritten digit image")
+# Center and constrain the main panel
+col_left, col_center, col_right = st.columns([1, 2, 1])
 
-uploaded_file = st.file_uploader(
-    "Choose an image...",
-    type=["jpg", "jpeg", "png"],
-    help="Upload an image of a handwritten digit"
-)
+with col_center:
+    st.subheader("Upload Image")
+    st.markdown("Upload a handwritten digit image")
 
-if uploaded_file is not None:
-    # Display uploaded image centered and constrained
-    col_left, col_center, col_right = st.columns([1, 2, 1])
-    with col_center:
+    uploaded_file = st.file_uploader(
+        "Choose an image...",
+        type=["jpg", "jpeg", "png"],
+        help="Upload an image of a handwritten digit"
+    )
+
+    if uploaded_file is not None:
+        # Display uploaded image
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded Image", use_container_width=True)
-    
-    # Store image for later use
-    st.session_state.uploaded_image = image
+        
+        # Store image for later use
+        st.session_state.uploaded_image = image
 
 # ============================================================================
 # PREDICTION BUTTON AND RESULTS
 # ============================================================================
 
-st.markdown("---")
+# Center the separator
+col_left_sep1, col_center_sep1, col_right_sep1 = st.columns([1, 2, 1])
+with col_center_sep1:
+    st.markdown("---")
 
-if st.button("Predict Digit", type="primary", use_container_width=True):
+# Center the predict button
+col_left_btn, col_center_btn, col_right_btn = st.columns([1, 2, 1])
+with col_center_btn:
+    predict_button = st.button("Predict Digit", type="primary", use_container_width=True)
+
+if predict_button:
     if "uploaded_image" not in st.session_state:
         st.error("Please upload an image first")
     else:
@@ -214,59 +227,66 @@ if st.button("Predict Digit", type="primary", use_container_width=True):
             confidence = np.max(probabilities[0])
             top_5 = get_top_5_predictions(probabilities, labels)
             
-            # Display results
-            st.markdown("---")
+            # Display results - centered and constrained
+            col_left_sep2, col_center_sep2, col_right_sep2 = st.columns([1, 2, 1])
+            with col_center_sep2:
+                st.markdown("---")
             
-            # Top-1 Prediction (in green box)
-            st.markdown(
-                f'<div class="prediction-success">Predicted Digit: <span class="confidence-high">{predicted_class}</span></div>',
-                unsafe_allow_html=True
-            )
+            col_left_result, col_center_result, col_right_result = st.columns([1, 2, 1])
             
-            # Confidence metric
-            st.metric(
-                label="Confidence Score",
-                value=f"{confidence*100:.2f}%",
-                delta=None
-            )
-            
-            # Top-5 Predictions Table
-            st.subheader("Top-5 Predictions")
-            
-            top_5_data = {
-                "Rank": list(range(1, 6)),
-                "Digit": [pred[0] for pred in top_5],
-                "Confidence": [f"{pred[1]*100:.2f}%" for pred in top_5]
-            }
-            top_5_df = pd.DataFrame(top_5_data)
-            st.dataframe(top_5_df, use_container_width=True, hide_index=True)
-            
-            # Top-5 Predictions Bar Chart
-            st.subheader("Confidence Distribution")
-            chart_data = pd.DataFrame({
-                "Digit": [pred[0] for pred in top_5],
-                "Confidence": [pred[1]*100 for pred in top_5]
-            })
-            st.bar_chart(chart_data.set_index("Digit"), use_container_width=True)
-            
-            # Additional info
-            col_info1, col_info2, col_info3 = st.columns(3)
-            with col_info1:
-                st.metric("Prediction", predicted_class)
-            with col_info2:
-                st.metric("Confidence", f"{confidence*100:.1f}%")
-            with col_info3:
-                next_best = top_5[1][0] if len(top_5) > 1 else "N/A"
-                st.metric("Second Best", next_best)
+            with col_center_result:
+                # Top-1 Prediction (in green box)
+                st.markdown(
+                    f'<div class="prediction-success">Predicted Digit: <span class="confidence-high">{predicted_class}</span></div>',
+                    unsafe_allow_html=True
+                )
+                
+                # Confidence metric
+                st.metric(
+                    label="Confidence Score",
+                    value=f"{confidence*100:.2f}%",
+                    delta=None
+                )
+                
+                # Top-5 Predictions Table
+                st.subheader("Top-5 Predictions")
+                
+                top_5_data = {
+                    "Rank": list(range(1, 6)),
+                    "Digit": [pred[0] for pred in top_5],
+                    "Confidence": [f"{pred[1]*100:.2f}%" for pred in top_5]
+                }
+                top_5_df = pd.DataFrame(top_5_data)
+                st.dataframe(top_5_df, use_container_width=True, hide_index=True)
+                
+                # Top-5 Predictions Bar Chart
+                st.subheader("Confidence Distribution")
+                chart_data = pd.DataFrame({
+                    "Digit": [pred[0] for pred in top_5],
+                    "Confidence": [pred[1]*100 for pred in top_5]
+                })
+                st.bar_chart(chart_data.set_index("Digit"), use_container_width=True, horizontal=True)
+                
+                # Additional info
+                col_info1, col_info2, col_info3 = st.columns(3)
+                with col_info1:
+                    st.metric("Prediction", predicted_class)
+                with col_info2:
+                    st.metric("Confidence", f"{confidence*100:.1f}%")
+                with col_info3:
+                    next_best = top_5[1][0] if len(top_5) > 1 else "N/A"
+                    st.metric("Second Best", next_best)
 
 # ============================================================================
 # FOOTER
 # ============================================================================
 
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center; color: #666; font-size: 0.9rem;">
-    <p>MNIST Digit Classifier | Deep Learning Web Application</p>
-    <p>Built with Streamlit and TensorFlow/Keras</p>
-</div>
-""", unsafe_allow_html=True)
+col_left_footer, col_center_footer, col_right_footer = st.columns([1, 2, 1])
+with col_center_footer:
+    st.markdown("---")
+    st.markdown("""
+    <div style="text-align: center; color: #666; font-size: 0.9rem;">
+        <p>MNIST Digit Classifier | Deep Learning Web Application</p>
+        <p>Built with Streamlit and TensorFlow/Keras</p>
+    </div>
+    """, unsafe_allow_html=True)
